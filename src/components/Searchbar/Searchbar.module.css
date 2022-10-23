@@ -1,0 +1,15 @@
+.header {
+  margin: 0 auto;
+  display: flex;
+  padding: 15px 30px;
+  align-items: center;
+  justify-content: space-between;
+}
+.title {
+}
+.form {
+}
+.input {
+}
+.searcButton {
+}
