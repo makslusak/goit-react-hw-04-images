@@ -28,7 +28,7 @@ export class Modal extends React.Component {
           <img
             className={css.image}
             src={activeImage.largeImageURL}
-            alt="large sithe image"
+            alt="large size"
           />
         </div>
       </div>
