@@ -1,10 +1,15 @@
+import propTypes from 'prop-types';
 import { children } from 'react';
 import css from './Button.module.css';
 
-export const Button = ({ children }) => {
+export const Button = ({ text, onClick }) => {
   return (
-    <button className={css.button} type="button">
-      {children}
+    <button onClick={onClick} className={css.button} type="button">
+      {text}
     </button>
   );
+};
+Button.propTypes = {
+  text: propTypes.string.isRequired,
+  onClick: propTypes.func.isRequired,
 };

@@ -1,15 +1,53 @@
 .header {
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  width: 94%;
   margin: 0 auto;
   display: flex;
-  padding: 15px 30px;
+  padding: 0px 50px;
   align-items: center;
   justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.455);
+  backdrop-filter: blur(10px);
 }
 .title {
+}
+.link {
+  text-decoration: none;
+  color: rgb(224, 224, 224);
+  font-size: 35px;
+  transition: color 250ms ease-in;
+}
+.link:hover,
+.link:focus {
+  color: rgb(255, 255, 255);
 }
 .form {
 }
 .input {
+  height: 30px;
+  width: 300px;
+  border: none;
+  padding-left: 30px;
+  padding-right: 30px;
+  outline: none;
+  background-color: rgb(231, 231, 231);
+  transition: background-color 250ms ease-in;
+}
+.input:focus {
+  background-color: rgb(255, 255, 255);
 }
 .searcButton {
+  height: 32px;
+  border: none;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: rgba(247, 247, 247, 0.66);
+  transition: background-color 250ms ease-in;
+}
+.searcButton:hover,
+.searcButton:focus {
+  background-color: rgb(255, 255, 255);
 }

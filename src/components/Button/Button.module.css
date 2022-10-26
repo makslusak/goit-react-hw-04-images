@@ -1,2 +1,17 @@
 .button {
+  display: block;
+
+  height: 32px;
+  border: none;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: rgb(228, 228, 228);
+  transition: background-color 250ms ease-in;
+  margin: 30px auto 50px auto;
+  box-shadow: 4px 4px 22px 0px rgba(0, 0, 0, 0.153);
+}
+
+.button:hover,
+.button:focus {
+  background-color: rgb(210, 210, 210);
 }
