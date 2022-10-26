@@ -1,5 +1,4 @@
 import propTypes from 'prop-types';
-import { children } from 'react';
 import css from './Button.module.css';
 
 export const Button = ({ text, onClick }) => {

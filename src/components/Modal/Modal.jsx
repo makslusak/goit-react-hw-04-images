@@ -21,11 +21,15 @@ export class Modal extends React.Component {
   };
   render() {
     const { isActiveImage, images } = this.props;
-    const activeImage = images?.find(image => image.id == isActiveImage);
+    const activeImage = images?.find(image => image.id === isActiveImage);
     return (
       <div onClick={this.handleModalClose} className={css.backdrop}>
         <div className={css.modal}>
-          <img className={css.image} src={activeImage.largeImageURL} />
+          <img
+            className={css.image}
+            src={activeImage.largeImageURL}
+            alt="large sithe image"
+          />
         </div>
       </div>
     );
