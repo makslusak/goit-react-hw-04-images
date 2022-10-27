@@ -1,40 +1,39 @@
 import propTypes from 'prop-types';
 import React from 'react';
+import { useState, useEffect } from 'react';
 import css from './Modal.module.css';
 
-export class Modal extends React.Component {
-  state = {
-    isModalOpen: false,
-  };
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleModalClose);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleModalClose);
-  }
+export const Modal = ({ images, onModalClose, isActiveImage }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  handleModalClose = evt => {
-    const { isModalOpen } = this.state;
+  const handleModalClose = evt => {
     if (evt.code === 'Escape' || evt.target === evt.currentTarget) {
-      this.props.onModalClose(isModalOpen);
+      onModalClose(isModalOpen);
     }
   };
-  render() {
-    const { isActiveImage, images } = this.props;
-    const activeImage = images?.find(image => image.id === isActiveImage);
-    return (
-      <div onClick={this.handleModalClose} className={css.backdrop}>
-        <div className={css.modal}>
-          <img
-            className={css.image}
-            src={activeImage.largeImageURL}
-            alt="large size"
-          />
-        </div>
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleModalClose);
+    return () => window.removeEventListener('keydown', handleModalClose);
+  }, []);
+
+  const activeImage = images?.find(image => {
+    return image.id === Number(isActiveImage);
+  });
+
+  return (
+    <div onClick={handleModalClose} className={css.backdrop}>
+      <div className={css.modal}>
+        <img
+          className={css.image}
+          src={activeImage.largeImageURL}
+          alt="large size"
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
 Modal.propTypes = {
   isActiveImage: propTypes.string.isRequired,
   images: propTypes.arrayOf(propTypes.object),

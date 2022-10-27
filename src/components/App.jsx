@@ -28,7 +28,6 @@ export class App extends React.Component {
         this.setState({ status: Status.loading });
         const responce = await getDataApi(search, page);
         this.setState({ responceQuantity: responce.totalHits });
-        console.log(responce);
 
         if (this.state.images === null) {
           this.setState({ images: responce.hits, status: Status.success });
