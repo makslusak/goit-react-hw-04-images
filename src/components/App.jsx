@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
@@ -9,90 +10,81 @@ import { Error } from './Error/Error';
 import { getDataApi } from '../helpers/api';
 import { Status } from '../helpers/status';
 
-export class App extends React.Component {
-  state = {
-    images: null,
-    page: 1,
-    search: '',
-    status: Status.init,
-    isError: null,
-    isActiveImage: null,
-    isModalOpen: false,
-    responceQuantity: null,
-  };
+export const App = () => {
+  const [images, setImages] = useState(null);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState(Status.init);
+  const [isError, setIsError] = useState(null);
+  const [isActiveImage, setIsActiveImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [responceQuantity, setResponceQuantity] = useState(null);
+  let numberOfPages = Math.ceil(responceQuantity / 12);
 
-  async componentDidUpdate(prevProps, prevState) {
-    const { page, search } = this.state;
-    try {
-      if (prevState.search !== search || prevState.page !== page) {
-        this.setState({ status: Status.loading });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setStatus(Status.loading);
         const responce = await getDataApi(search, page);
-        this.setState({ responceQuantity: responce.totalHits });
-
-        if (this.state.images === null) {
-          this.setState({ images: responce.hits, status: Status.success });
+        setResponceQuantity(responce.totalHits);
+        if (images === null) {
+          setImages(responce.hits);
+          setStatus(Status.success);
         } else {
-          this.setState(prevSt => ({
-            images: [...prevSt.images, ...responce.hits],
-            status: Status.success,
-          }));
+          setImages([...images, ...responce.hits]);
+          setStatus(Status.success);
         }
+      } catch (error) {
+        setIsError(error.message);
+        setStatus(Status.error);
       }
-    } catch (error) {
-      this.setState({ isError: error.message, status: Status.error });
-    }
-  }
+    };
+    if (search) fetchData();
+    // eslint-disable-next-line
+  }, [search, page]);
 
-  handleDataFromSubmit = data => {
-    this.setState({ page: 1, images: null, search: data });
+  const handleDataFromSubmit = data => {
+    setPage(1);
+    setImages(null);
+    setSearch(data);
+    setIsModalOpen(false);
   };
-  handlePageChange = () => {
-    this.setState(prevState => {
-      return { page: prevState.page + 1, status: Status.loading };
-    });
+
+  const handlePageChange = () => {
+    setStatus(Status.loading);
+    setPage(page + 1);
   };
-  handleModalShow = evt => {
+
+  const handleModalShow = evt => {
     if (evt.currentTarget === evt.target) {
-      this.setState({ isActiveImage: evt.currentTarget.id, isModalOpen: true });
+      setIsActiveImage(evt.currentTarget.id);
+      setIsModalOpen(true);
     }
   };
-  handleModalClose = isOpen => {
-    this.setState({ isModalOpen: isOpen });
+
+  const handleModalClose = isOpen => {
+    setIsModalOpen(isOpen);
   };
 
-  render() {
-    const {
-      page,
-      images,
-      status,
-      isActiveImage,
-      isModalOpen,
-      isError,
-      responceQuantity,
-    } = this.state;
-    let numberOfPages = Math.ceil(responceQuantity / 12);
-    return (
-      <>
-        <Searchbar onSubmit={this.handleDataFromSubmit} />
-        {status === Status.loading && <Loader />}
-        {status === Status.error && <Error textError={isError} />}
-        {images && (
-          <ImageGallery onClick={this.handleModalShow} images={images} />
-        )}
-        {images && images.length !== 0 && numberOfPages !== page && (
-          <Button text={'Load more'} onClick={this.handlePageChange} />
-        )}
-        {images?.length === 0 && (
-          <Error textError={'Try to find something else'} />
-        )}
-        {isModalOpen && (
-          <Modal
-            isActiveImage={isActiveImage}
-            onModalClose={this.handleModalClose}
-            images={images}
-          />
-        )}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Searchbar onSubmit={handleDataFromSubmit} />
+      {status === Status.loading && <Loader />}
+      {status === Status.error && <Error textError={isError} />}
+      {images && <ImageGallery onClick={handleModalShow} images={images} />}
+      {images && images.length !== 0 && numberOfPages !== page && (
+        <Button text={'Load more'} onClick={handlePageChange} />
+      )}
+      {images?.length === 0 && (
+        <Error textError={'Try to find something else'} />
+      )}
+      {isModalOpen && (
+        <Modal
+          isActiveImage={isActiveImage}
+          onModalClose={handleModalClose}
+          images={images}
+        />
+      )}
+    </>
+  );
+};
