@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import css from './Modal.module.css';
 
 export const Modal = ({ images, onModalClose, isActiveImage }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen] = useState(false);
 
   const handleModalClose = evt => {
     if (evt.code === 'Escape' || evt.target === evt.currentTarget) {
@@ -15,6 +15,7 @@ export const Modal = ({ images, onModalClose, isActiveImage }) => {
   useEffect(() => {
     window.addEventListener('keydown', handleModalClose);
     return () => window.removeEventListener('keydown', handleModalClose);
+    // eslint-disable-next-line
   }, []);
 
   const activeImage = images?.find(image => {
